@@ -1,0 +1,31 @@
+name: Build AutoClickerPro.exe
+
+on:
+  workflow_dispatch:   # lets you click "Run workflow" manually on GitHub
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest   # GitHub gives us a real, temporary Windows machine
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build the exe
+        run: pyinstaller --onefile --windowed --name AutoClickerPro autoclicker_noinstall.py
+
+      - name: Upload the exe as a downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoClickerPro
+          path: dist/AutoClickerPro.exe
